@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFforProjectVijay"
+		},
+		"AzureSQL_linkedService_password": {
+			"value": ""
+		},
+		"linkedservice_Onprem_file_password": {
+			"value": ""
+		},
+		"ls_datalake_accountKey": {
+			"value": ""
+		},
+		"API_Github_LinkedService_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com"
+		},
+		"AzureSQL_linkedService_properties_typeProperties_server": {
+			"value": "adfprojectvijay.database.windows.net"
+		},
+		"AzureSQL_linkedService_properties_typeProperties_database": {
+			"value": "adfprojectDB"
+		},
+		"AzureSQL_linkedService_properties_typeProperties_userName": {
+			"value": "vijay"
+		},
+		"linkedservice_Onprem_file_properties_typeProperties_host": {
+			"value": "C:\\Files_for_IntegrationRuntime_host"
+		},
+		"linkedservice_Onprem_file_properties_typeProperties_userId": {
+			"value": "vijay"
+		},
+		"ls_datalake_properties_typeProperties_url": {
+			"value": "https://storagefactoryprojectvij.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
