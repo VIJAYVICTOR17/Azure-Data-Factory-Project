@@ -1,0 +1,34 @@
+{
+	"name": "GoldLayer",
+	"properties": {
+		"activities": [
+			{
+				"name": "GoldenContainerDF",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DataBusinessServing",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-11-18T11:59:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,15 @@
+{
+	"name": "ADFforProjectVijay",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6c5ed4f9-8ff0-4c9e-aca8-9dd5c3ae8c5e",
+		"tenantId": "0a76cbf5-3b90-40f2-828f-289b366d07f7"
+	}
+}

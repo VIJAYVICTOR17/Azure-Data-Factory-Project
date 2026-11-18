@@ -1,0 +1,6 @@
+{
+	"name": "ProjectIntegrationRuntime",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"name": "Source_Onprem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedservice_Onprem_file",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Parameter_filenames": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@dataset().Parameter_filenames",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

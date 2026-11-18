@@ -1,0 +1,17 @@
+{
+	"name": "linkedservice_Onprem_file",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\Files_for_IntegrationRuntime_host",
+			"userId": "vijay",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZGU0Zjk4MC1jZDYyLTRkMGUtODk2Yy1iNGVmOWYyZGU0NWIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ProjectIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,429 @@
+{
+	"name": "DataBusinessServing",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DimAirline"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DimFlight"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DimPassenger"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SQL"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Github"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DimFlightGold"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkDimPassenger"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkSQL"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkGithub"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkAirline"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AirlineJoin"
+				},
+				{
+					"name": "selectAirlineID"
+				},
+				{
+					"name": "aggregateTicketCost"
+				},
+				{
+					"name": "RnakingTicketCost"
+				},
+				{
+					"name": "Top5"
+				},
+				{
+					"name": "FlightJoinwithSql"
+				},
+				{
+					"name": "aggregateFlightwithMaxBookingsTotalTicketCost"
+				},
+				{
+					"name": "selectFlightId"
+				},
+				{
+					"name": "windowTopRevenue"
+				},
+				{
+					"name": "joinPassenerSql"
+				},
+				{
+					"name": "selectPassengerId"
+				},
+				{
+					"name": "aggregateTickeCost"
+				},
+				{
+					"name": "windowHighestSpending"
+				},
+				{
+					"name": "joinSqlBusiestAirports"
+				},
+				{
+					"name": "selectAirportID"
+				},
+				{
+					"name": "aggregateBusiestAirports"
+				},
+				{
+					"name": "windowTopAirports"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "alterRow2"
+				},
+				{
+					"name": "alterRow3"
+				},
+				{
+					"name": "alterRow4"
+				},
+				{
+					"name": "alterRow5"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          airline_id as short,",
+				"          airline_name as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'DimAirline') ~> DimAirline",
+				"source(output(",
+				"          flight_id as short,",
+				"          flight_number as string,",
+				"          FlightDeparture_time as string,",
+				"          FlightArrival_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'DimFlight') ~> DimFlight",
+				"source(output(",
+				"          passenger_id as short,",
+				"          full_name as string,",
+				"          gender as string,",
+				"          age as short,",
+				"          country as string,",
+				"          first_name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'DimPassenger') ~> DimPassenger",
+				"source(output(",
+				"          booking_id as integer,",
+				"          passenger_id as integer,",
+				"          flight_id as integer,",
+				"          airline_id as integer,",
+				"          origin_airport_id as integer,",
+				"          destination_airport_id as integer,",
+				"          booking_date as date,",
+				"          ticket_cost as integer,",
+				"          flight_duration_mins as integer,",
+				"          checkin_status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'SQL') ~> SQL",
+				"source(output(",
+				"          airport_id as short,",
+				"          airport_name as string,",
+				"          city as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'Github') ~> Github",
+				"SQL, DimAirline join(SQL@airline_id == DimAirline@airline_id,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> AirlineJoin",
+				"AirlineJoin select(mapColumn(",
+				"          booking_id,",
+				"          passenger_id,",
+				"          flight_id,",
+				"          airline_id = SQL@airline_id,",
+				"          origin_airport_id,",
+				"          destination_airport_id,",
+				"          booking_date,",
+				"          ticket_cost,",
+				"          flight_duration_mins,",
+				"          checkin_status,",
+				"          airline_name,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectAirlineID",
+				"selectAirlineID aggregate(groupBy(airline_name),",
+				"     Total_cost = sum(ticket_cost)) ~> aggregateTicketCost",
+				"aggregateTicketCost window(desc(Total_cost, true),",
+				"     Top = denseRank()) ~> RnakingTicketCost",
+				"RnakingTicketCost filter(Top <= 5) ~> Top5",
+				"DimFlight, SQL join(DimFlight@flight_id == SQL@flight_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> FlightJoinwithSql",
+				"selectFlightId aggregate(groupBy(flight_number),",
+				"     Max_Bookings = count(booking_id),",
+				"          Total_Revenue = sum(ticket_cost)) ~> aggregateFlightwithMaxBookingsTotalTicketCost",
+				"FlightJoinwithSql select(mapColumn(",
+				"          flight_id = DimFlight@flight_id,",
+				"          flight_number,",
+				"          FlightDeparture_time,",
+				"          FlightArrival_time,",
+				"          booking_id,",
+				"          passenger_id,",
+				"          airline_id,",
+				"          origin_airport_id,",
+				"          destination_airport_id,",
+				"          booking_date,",
+				"          ticket_cost,",
+				"          flight_duration_mins,",
+				"          checkin_status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFlightId",
+				"aggregateFlightwithMaxBookingsTotalTicketCost window(desc(Total_Revenue, true),",
+				"     TopRevenue = denseRank()) ~> windowTopRevenue",
+				"DimPassenger, SQL join(DimPassenger@passenger_id == SQL@passenger_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinPassenerSql",
+				"joinPassenerSql select(mapColumn(",
+				"          passenger_id = DimPassenger@passenger_id,",
+				"          full_name,",
+				"          gender,",
+				"          age,",
+				"          country,",
+				"          first_name,",
+				"          booking_id,",
+				"          flight_id,",
+				"          airline_id,",
+				"          origin_airport_id,",
+				"          destination_airport_id,",
+				"          booking_date,",
+				"          ticket_cost,",
+				"          flight_duration_mins,",
+				"          checkin_status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectPassengerId",
+				"selectPassengerId aggregate(groupBy(full_name),",
+				"     ticket_cost = sum(ticket_cost)) ~> aggregateTickeCost",
+				"aggregateTickeCost window(desc(ticket_cost, true),",
+				"     Hieghest_Spending = denseRank()) ~> windowHighestSpending",
+				"Github, SQL join(airport_id == origin_airport_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinSqlBusiestAirports",
+				"joinSqlBusiestAirports select(mapColumn(",
+				"          airport_id,",
+				"          airport_name,",
+				"          city,",
+				"          country,",
+				"          booking_id,",
+				"          passenger_id,",
+				"          flight_id,",
+				"          airline_id,",
+				"          destination_airport_id,",
+				"          booking_date,",
+				"          ticket_cost,",
+				"          flight_duration_mins,",
+				"          checkin_status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectAirportID",
+				"selectAirportID aggregate(groupBy(airport_id,",
+				"          airport_name,",
+				"          country,",
+				"          city),",
+				"     total_bookings = count(booking_id)) ~> aggregateBusiestAirports",
+				"aggregateBusiestAirports window(desc(total_bookings, true),",
+				"     Top_Bookings = denseRank()) ~> windowTopAirports",
+				"windowTopRevenue alterRow(insertIf(0==0)) ~> alterRow1",
+				"windowHighestSpending alterRow(insertIf(0==0)) ~> alterRow2",
+				"Top5 alterRow(insertIf(0==0)) ~> alterRow3",
+				"windowTopAirports alterRow(insertIf(0==0)) ~> alterRow4",
+				"DimAirline alterRow(insertIf(0==0)) ~> alterRow5",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'glod',",
+				"     folderPath: 'DimFlightBusinessView',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DimFlightGold",
+				"alterRow2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'glod',",
+				"     folderPath: 'DimPassengerBusinessView',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDimPassenger",
+				"alterRow3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'glod',",
+				"     folderPath: 'SQLFlatBokingsBuniessview',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkSQL",
+				"alterRow4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'glod',",
+				"     folderPath: 'GithubBusinessView',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkGithub",
+				"alterRow5 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'glod',",
+				"     folderPath: 'DimAirlineBusinessView',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkAirline"
+			]
+		}
+	}
+}
