@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "azuredatafaactory"
+		},
+		"linkedserviceDataLake_accountKey": {
+			"value": ""
+		},
+		"Linkedget_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com"
+		},
+		"linkedserviceDataLake_properties_typeProperties_url": {
+			"value": "https://storagefactoryvijay.dfs.core.windows.net/"
+		},
+		"ManagerReallyUploadFileTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cd368ecb-c470-4d34-8c0a-d42e04b55d1b/resourceGroups/AzureDataFactory_RG/providers/Microsoft.Storage/storageAccounts/storagefactoryvijay"
+		},
+		"ManagerTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cd368ecb-c470-4d34-8c0a-d42e04b55d1b/resourceGroups/AzureDataFactory_RG/providers/Microsoft.Storage/storageAccounts/storagefactoryvijay"
+		},
+		"ManagerUploadFilesTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cd368ecb-c470-4d34-8c0a-d42e04b55d1b/resourceGroups/AzureDataFactory_RG/providers/Microsoft.Storage/storageAccounts/storagefactoryvijay"
+		}
+	}
+}
