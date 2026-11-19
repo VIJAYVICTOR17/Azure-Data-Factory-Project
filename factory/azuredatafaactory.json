@@ -1,0 +1,16 @@
+{
+	"name": "azuredatafaactory",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true,
+			"isExplicitlySet": false
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "39941af8-ee3e-4134-a3dd-07e3e1b0a61f",
+		"tenantId": "0a76cbf5-3b90-40f2-828f-289b366d07f7"
+	}
+}

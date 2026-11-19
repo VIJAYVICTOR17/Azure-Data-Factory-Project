@@ -1,0 +1,88 @@
+{
+	"name": "TransformCsv",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DataTransformSource",
+						"type": "DatasetReference"
+					},
+					"name": "sourceCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DataFlows_DestinationCSV",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDestination"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectCols"
+				},
+				{
+					"name": "filterRows"
+				},
+				{
+					"name": "splitDataOnAmount"
+				},
+				{
+					"name": "derivedColumnNulls"
+				},
+				{
+					"name": "aggregateCutomer"
+				},
+				{
+					"name": "alterRow"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          transaction_id as short,",
+				"          transactional_date as timestamp,",
+				"          product_id as string,",
+				"          customer_id as short,",
+				"          payment as string,",
+				"          credit_card as long,",
+				"          loyalty_card as boolean,",
+				"          cost as double,",
+				"          quantity as short,",
+				"          price as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceCSV",
+				"sourceCSV select(mapColumn(",
+				"          transaction_id,",
+				"          product_id,",
+				"          customer_id,",
+				"          payment,",
+				"          cost,",
+				"          price",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectCols",
+				"selectCols filter(customer_id != 5) ~> filterRows",
+				"filterRows split(payment == 'americanexpress',",
+				"     payment == 'visa',",
+				"     disjoint: false) ~> splitDataOnAmount@(americanexpress, visa, OtherThanamericanexpressAndvisa)",
+				"splitDataOnAmount@OtherThanamericanexpressAndvisa derive(payment = coalesce(payment, 'N/A')) ~> derivedColumnNulls",
+				"splitDataOnAmount@americanexpress aggregate(groupBy(customer_id),",
+				"     transaction_id = max(transaction_id)) ~> aggregateCutomer",
+				"aggregateCutomer alterRow(insertIf('1'=='1')) ~> alterRow",
+				"alterRow sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDestination"
+			]
+		}
+	}
+}

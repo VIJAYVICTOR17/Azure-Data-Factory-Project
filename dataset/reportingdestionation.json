@@ -1,0 +1,33 @@
+{
+	"name": "reportingdestionation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedserviceDataLake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"parameter_fact_files": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().parameter_fact_files",
+					"type": "Expression"
+				},
+				"folderPath": "FactFiles",
+				"fileSystem": "reporting"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

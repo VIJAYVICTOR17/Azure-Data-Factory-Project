@@ -1,0 +1,17 @@
+{
+	"name": "ManagerTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/source/blobs/csvfiles/Fact_Sales_1.csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/cd368ecb-c470-4d34-8c0a-d42e04b55d1b/resourceGroups/AzureDataFactory_RG/providers/Microsoft.Storage/storageAccounts/storagefactoryvijay",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

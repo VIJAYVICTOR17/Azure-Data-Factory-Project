@@ -1,0 +1,33 @@
+{
+	"name": "FactfilesSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedserviceDataLake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"param_Fact_file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().param_Fact_file",
+					"type": "Expression"
+				},
+				"folderPath": "csvfiles",
+				"fileSystem": "destination"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
